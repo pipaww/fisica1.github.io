@@ -21,7 +21,7 @@ function setup() {
 
   // Inicializar los autos con velocidad 0 (estáticos)
   car1 = new Car(62, height / 2 + 10, 0, masaCar1, carImg1); // Auto de la izquierda sobre la línea
-  car2 = new Car(620, height / 2 + 10, 0, masaCar2, carImg2); // Auto de la derecha sobre la línea
+  car2 = new Car(635, height / 2 + 10, 0, masaCar2, carImg2); // Auto de la derecha sobre la línea
 
   // Escuchar el cambio en los deslizadores y actualizar valores
   document.getElementById('auto1').addEventListener('input', function() {
@@ -113,6 +113,17 @@ function draw() {
 
   car1.display();
   car2.display();
+
+  // Mostrar las velocidades directamente en el canvas
+  fill(255); // Color blanco para el texto
+  textSize(16);
+  textAlign(CENTER);
+  
+  // Mostrar velocidad del auto 1 debajo del auto 1
+  text(`Velocidad: ${(car1.vx * 10).toFixed(2)} m/s`, car1.x + car1.width / 2, car1.y + 30);
+  
+  // Mostrar velocidad del auto 2 debajo del auto 2
+  text(`Velocidad: ${(car2.vx * -10).toFixed(2)} m/s`, car2.x + car2.width / 2, car2.y + 30);
 }
 
 // Función para iniciar la simulación
