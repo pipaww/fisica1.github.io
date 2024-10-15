@@ -14,8 +14,8 @@ const initialPositionCar2 = 620;
 
 function preload() {
   // Cargar las dos imágenes de los autos
-  carImg1 = loadImage('auto copy.webp');  // Imagen del auto de la izquierda
-  carImg2 = loadImage('auto.webp');       // Imagen del auto de la derecha
+  carImg1 = loadImage('imagenes/auto copy.webp');  // Imagen del auto de la izquierda
+  carImg2 = loadImage('imagenes/auto.webp');       // Imagen del auto de la derecha
 }
 
 function setup() {
