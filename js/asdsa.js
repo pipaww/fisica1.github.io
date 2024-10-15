@@ -8,10 +8,14 @@ let velocidadCar2 = 1;  // Valor inicial para el deslizador de velocidad de car2
 let masaCar1 = 1;  // Valor inicial para el deslizador de masa de car1
 let masaCar2 = 1;  // Valor inicial para el deslizador de masa de car2
 
+// Posiciones iniciales de los autos
+const initialPositionCar1 = 62;
+const initialPositionCar2 = 620;
+
 function preload() {
   // Cargar las dos imágenes de los autos
-  carImg1 = loadImage('imagenes/auto copy.webp');  // Imagen del auto de la izquierda
-  carImg2 = loadImage('imagenes/auto.webp');       // Imagen del auto de la derecha
+  carImg1 = loadImage('auto copy.webp');  // Imagen del auto de la izquierda
+  carImg2 = loadImage('auto.webp');       // Imagen del auto de la derecha
 }
 
 function setup() {
@@ -20,8 +24,8 @@ function setup() {
   canvas.parent('canvasContainer'); // Asociar el canvas de p5.js al contenedor HTML con id="canvasContainer"
 
   // Inicializar los autos con velocidad 0 (estáticos)
-  car1 = new Car(62, height / 2 + 10, 0, masaCar1, carImg1); // Auto de la izquierda sobre la línea
-  car2 = new Car(620, height / 2 + 10, 0, masaCar2, carImg2); // Auto de la derecha sobre la línea
+  car1 = new Car(initialPositionCar1, height / 2 + 10, 0, masaCar1, carImg1); // Auto de la izquierda sobre la línea
+  car2 = new Car(initialPositionCar2, height / 2 + 10, 0, masaCar2, carImg2); // Auto de la derecha sobre la línea
 
   // Escuchar el cambio en los deslizadores y actualizar valores
   document.getElementById('auto1').addEventListener('input', function() {
@@ -90,7 +94,7 @@ function draw() {
       let e = 0; // Coeficiente de restitución por defecto (inelástico)
       
       // Verificar si el checkbox de choque elástico está marcado
-      if (document.getElementById('checkbox1').checked) {
+      if (document.getElementById('choqueElastico').checked) {
         e = 1; // Choque elástico
       }
 
@@ -119,6 +123,10 @@ function draw() {
 function iniciarSimulacion() {
   simulationStarted = true;
   simulationStopped = false;
+
+  // Reiniciar posiciones de los autos
+  car1.x = initialPositionCar1; // Volver a la posición inicial
+  car2.x = initialPositionCar2; // Volver a la posición inicial
 
   // Asignar las velocidades y masas de los autos basadas en los valores actuales de los deslizadores
   car1.vx = velocidadCar1 / 10;  // El auto de la izquierda se moverá hacia la derecha
