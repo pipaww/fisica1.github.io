@@ -120,10 +120,10 @@ function draw() {
   textAlign(CENTER);
   
   // Mostrar velocidad del auto 1 debajo del auto 1
-  text(`Velocidad: ${(car1.vx * 10).toFixed(2)} m/s`, car1.x + car1.width / 2, car1.y + 30);
+  text(`Velocidad: ${Math.abs(car1.vx * 10).toFixed(2)} m/s`, car1.x + car1.width / 2, car1.y + 30);
   
   // Mostrar velocidad del auto 2 debajo del auto 2
-  text(`Velocidad: ${(car2.vx * -10).toFixed(2)} m/s`, car2.x + car2.width / 2, car2.y + 30);
+  text(`Velocidad: ${Math.abs(car2.vx * -10).toFixed(2)} m/s`, car2.x + car2.width / 2, car2.y + 30);
 }
 
 // Función para iniciar la simulación
