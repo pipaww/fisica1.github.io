@@ -20,7 +20,7 @@ body {
 header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   position: relative;
   background-color: #fff;
   color: #0000;
@@ -39,12 +39,13 @@ header {
     color: #333;
     font-family: Georgia, 'Times New Roman', Times, serif, Helvetica, sans-serif;
   font-weight: bold;
+  margin-right: 30px;
   }
 
   @media (max-width: 600px) {
-    flex-direction: column;
+    display: flex;
     gap: 15px;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
   }
 }
@@ -148,4 +149,5 @@ footer {
     font-size: 2rem;
   }
 }
+
 
