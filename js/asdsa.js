@@ -8,6 +8,9 @@ let velocidadCar2 = 1;  // Valor inicial para el deslizador de velocidad de car2
 let masaCar1 = 1;  // Valor inicial para el deslizador de masa de car1
 let masaCar2 = 1;  // Valor inicial para el deslizador de masa de car2
 
+let velocidadInicialCar1, velocidadInicialCar2;  // Guardar las velocidades iniciales
+let velocidadFinalCar1, velocidadFinalCar2;  // Guardar las velocidades finales
+
 function preload() {
   // Cargar las dos imágenes de los autos
   carImg1 = loadImage('imagenes/auto copy.webp');  // Imagen del auto de la izquierda
@@ -47,14 +50,19 @@ function setup() {
   // Escuchar el clic en el botón "iniciar" para comenzar la simulación
   document.getElementById('iniciar').addEventListener('click', iniciarSimulacion);
   
-  // Escuchar el clic en el botón "reiniciar" para recargar la página
-  document.getElementById('reiniciar').addEventListener('click', function() {
-    location.reload(); // Reinicia la página
-  });
 
   // Escuchar el clic en el botón "pantallaCompleta" para activar el modo pantalla completa
   document.getElementById('pantallaCompleta').addEventListener('click', function() {
     toggleFullScreen(); // Alternar modo pantalla completa
+  });
+
+  // Manejo del checkbox3 para el choque parcialmente inelástico
+  checkbox3.addEventListener('change', function() {
+    if (checkbox3.checked) {
+      inputValue.style.display = "inline-block"; // Mostrar el input si está marcado
+    } else {
+      inputValue.style.display = "none"; // Ocultar el input si está desmarcado
+    }
   });
 }
 
@@ -88,22 +96,34 @@ function draw() {
     // Verificar si los autos colisionan entre sí
     if (collides(car1, car2)) {
       let e = 0; // Coeficiente de restitución por defecto (inelástico)
-      
+
       // Verificar si el checkbox de choque elástico está marcado
       if (document.getElementById('checkbox1').checked) {
         e = 1; // Choque elástico
       }
 
-      // Calcular las velocidades finales
-      let v1Final = ((car1.mass - car2.mass) / (car1.mass + car2.mass)) * car1.vx + 
-                    ((2 * car2.mass) / (car1.mass + car2.mass)) * car2.vx * e;
+      // Verificar si el checkbox de choque parcialmente inelástico está marcado
+      if (checkbox3.checked) {
+        let kValue = parseFloat(inputValue.value);
+        if (kValue >= 0.01 && kValue <= 0.99) {
+          e = kValue; // Usar el valor de k para choque parcialmente inelástico
+        }
+      }
 
-      let v2Final = ((2 * car1.mass) / (car1.mass + car2.mass)) * car1.vx + 
-                    ((car2.mass - car1.mass) / (car1.mass + car2.mass)) * car2.vx * e;
+      // Calcular las velocidades finales con la ecuación del choque parcialmente inelástico
+      let v1Final = ((car1.mass - e * car2.mass) / (car1.mass + car2.mass)) * car1.vx + 
+                    ((1 + e) * car2.mass / (car1.mass + car2.mass)) * car2.vx;
+
+      let v2Final = ((car2.mass - e * car1.mass) / (car1.mass + car2.mass)) * car2.vx + 
+                    ((1 + e) * car1.mass / (car1.mass + car2.mass)) * car1.vx;
 
       // Asignar las nuevas velocidades
       car1.vx = v1Final;
       car2.vx = v2Final;
+
+      // Guardar las velocidades finales
+      velocidadFinalCar1 = v1Final;
+      velocidadFinalCar2 = v2Final;
 
       // Asegurarse de que los autos no desaparezcan
       car1.x = constrain(car1.x, 20, width - car1.width - 20);
@@ -123,7 +143,7 @@ function draw() {
   text(`Velocidad: ${Math.abs(car1.vx * 10).toFixed(2)} m/s`, car1.x + car1.width / 2, car1.y + 30);
   
   // Mostrar velocidad del auto 2 debajo del auto 2
-  text(`Velocidad: ${Math.abs(car2.vx * -10).toFixed(2)} m/s`, car2.x + car2.width / 2, car2.y + 30);
+  text(`Velocidad: ${Math.abs(car2.vx * 10).toFixed(2)} m/s`, car2.x + car2.width / 2, car2.y + 30);
 }
 
 // Función para iniciar la simulación
@@ -131,9 +151,17 @@ function iniciarSimulacion() {
   simulationStarted = true;
   simulationStopped = false;
 
+  // Restablecer las posiciones iniciales de los autos
+  car1.x = 62;  // Posición inicial del auto 1
+  car2.x = 635;  // Posición inicial del auto 2
+
+  // Guardar las velocidades iniciales de los autos
+  velocidadInicialCar1 = velocidadCar1 / 10;
+  velocidadInicialCar2 = -velocidadCar2 / 10;
+
   // Asignar las velocidades y masas de los autos basadas en los valores actuales de los deslizadores
-  car1.vx = velocidadCar1 / 10;  // El auto de la izquierda se moverá hacia la derecha
-  car2.vx = -velocidadCar2 / 10; // El auto de la derecha se moverá hacia la izquierda
+  car1.vx = velocidadInicialCar1;  // El auto de la izquierda se moverá hacia la derecha
+  car2.vx = velocidadInicialCar2;  // El auto de la derecha se moverá hacia la izquierda
 
   car1.mass = masaCar1;  // Actualizar la masa del auto 1
   car2.mass = masaCar2;  // Actualizar la masa del auto 2
@@ -144,7 +172,18 @@ function detenerSimulacion() {
   simulationStopped = true;  // Detener la simulación
   car1.vx = 0;  // Detener el movimiento del auto 1
   car2.vx = 0;  // Detener el movimiento del auto 2
-  console.log('Simulación detenida: Colisión con la pared');
+
+  // Mostrar un alert con las velocidades y masas
+  alert(
+    `Auto 1:\n` +
+    `Masa: ${car1.mass}\n` +
+    `Velocidad Inicial: ${Math.abs(velocidadInicialCar1.toFixed(2))} m/s\n` +
+    `Velocidad Final: ${velocidadFinalCar1.toFixed(2)} m/s\n\n` +
+    `Auto 2:\n` +
+    `Masa: ${car2.mass}\n` +
+    `Velocidad Inicial: ${Math.abs(velocidadInicialCar2.toFixed(2))} m/s\n` +
+    `Velocidad Final: ${velocidadFinalCar2.toFixed(2)} m/s`
+  );
 }
 
 // Función para verificar si un auto colisiona con las paredes
