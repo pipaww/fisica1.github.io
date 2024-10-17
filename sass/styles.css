@@ -15,7 +15,7 @@ body {
 header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   position: relative;
   background-color: #fff;
   color: rgba(0, 0, 0, 0);
@@ -33,12 +33,13 @@ header .title {
   color: #333;
   font-family: Georgia, "Times New Roman", Times, serif, Helvetica, sans-serif;
   font-weight: bold;
+  margin-right: 30px;
 }
 @media (max-width: 600px) {
   header {
-    flex-direction: column;
+    display: flex;
     gap: 15px;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
   }
 }
