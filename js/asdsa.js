@@ -155,7 +155,7 @@ function detenerSimulacion() {
     `Auto 2:\n` +
     `Masa: ${car2.mass}\n` +
     `Velocidad Inicial: ${Math.abs(velocidadInicialCar2.toFixed(2))*10} m/s\n` +
-    `Velocidad Final: ${(velocidadFinalCar2.toFixed(2))*10.0} m/s`
+    `Velocidad Final: ${velocidadFinalCar2.toFixed(2)*10} m/s`
   );
 }
 
